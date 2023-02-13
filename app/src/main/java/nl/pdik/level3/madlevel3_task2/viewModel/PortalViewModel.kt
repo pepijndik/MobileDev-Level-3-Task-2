@@ -6,17 +6,19 @@ import androidx.compose.runtime.remember
 import androidx.lifecycle.ViewModel
 import nl.pdik.level3.madlevel3_task2.model.Portal
 
-class PortalViewModel  : ViewModel() {
-    val portals =   mutableStateListOf<Portal>()
+class PortalViewModel : ViewModel() {
+    val portals = mutableStateListOf<Portal>()
 
 
-    fun addPortal(portal: Portal){
+    fun addPortal(portal: Portal) {
         portals.add(portal);
     }
 
-    fun someValues(){
-        portals.add(Portal("http://dlo.mijnhva.nl","dlo"));
-        portals.add(Portal("http://mijnhva.nl","Mijn hva"));
-        portals.add(Portal("http://rooster.hva.nl","Rooster"));
+    fun someValues(): List<Portal> {
+        return listOf(
+            Portal("http://dlo.mijnhva.nl", "dlo"),
+            Portal("http://mijnhva.nl", "Mijn hva"),
+            Portal("http://rooster.hva.nl", "Rooster")
+        );
     }
 }

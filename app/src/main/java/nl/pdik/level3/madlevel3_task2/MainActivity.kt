@@ -9,6 +9,7 @@ import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
@@ -43,6 +44,7 @@ class MainActivity : ComponentActivity() {
 private fun PortalNavHost(
     navController: NavHostController, modifier: Modifier
 ) {
+    val context = LocalContext.current
     val viewModel: PortalViewModel = viewModel()
     viewModel.someValues(); //some random start values
     NavHost(
@@ -55,7 +57,7 @@ private fun PortalNavHost(
             PortalOverviewScreen(navController,viewModel)
         }
         composable(PortalScreens.AddPortalScreen.name) {
-            AddPortalScreen(navController,viewModel)
+            AddPortalScreen(navController,viewModel, context)
         }
     }
 
@@ -70,6 +72,7 @@ fun DefaultPreview() {
     MADLevel3Task2Theme {
         val navController = rememberNavController()
         val viewModel: PortalViewModel = viewModel()
+        viewModel.someValues();
         PortalOverviewScreen(navController,viewModel)
     }
 }

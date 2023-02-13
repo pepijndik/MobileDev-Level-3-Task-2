@@ -4,13 +4,16 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
+import androidx.compose.foundation.shape.CornerSize
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.ArrowForward
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -26,25 +29,36 @@ import nl.pdik.level3.madlevel3_task2.ui.theme.MADLevel3Task2Theme
 import nl.pdik.level3.madlevel3_task2.viewModel.PortalViewModel
 
 @Composable
-fun PortalOverviewScreen(navHostController: NavHostController, viewModel: PortalViewModel){
+fun PortalOverviewScreen(navHostController: NavHostController, viewModel: PortalViewModel) {
     Scaffold(
-        topBar =  {
-            TopAppBar( title = { Text(text = stringResource(id = R.string.app_name))})
+        topBar = {
+            TopAppBar(title = { Text(text = stringResource(id = R.string.app_name)) })
         },
         floatingActionButton = {
             ExtendedFloatingActionButton(
-                text = {""},
-                icon = {Icon(Icons.Filled.ArrowForward,"Next")},
-                onClick = {  navHostController.navigate(PortalScreens.AddPortalScreen.name) }
+                text = { null },
+                icon = { Icon(Icons.Filled.Add, "Next") },
+                onClick = { navHostController.navigate(PortalScreens.AddPortalScreen.name) },
+                shape = MaterialTheme.shapes.large.copy(CornerSize(percent = 34)),
+            )
+        },
+
+        content = { padding ->
+            PortalOverviewScreenContent(
+                Modifier.padding(padding),
+                navHostController,
+                viewModel
             )
         }
-        ,
-
-        content = {padding -> PortalOverviewScreenContent(Modifier.padding(padding),navHostController,viewModel)  }
     )
 }
+
 @Composable
-private fun PortalOverviewScreenContent(modifier: Modifier, navHostController: NavHostController,viewModel: PortalViewModel){
+private fun PortalOverviewScreenContent(
+    modifier: Modifier,
+    navHostController: NavHostController,
+    viewModel: PortalViewModel
+) {
     LazyVerticalGrid(
         columns = GridCells.Adaptive(140.dp),
         contentPadding = PaddingValues(8.dp),
@@ -53,7 +67,7 @@ private fun PortalOverviewScreenContent(modifier: Modifier, navHostController: N
 
         content = {
             items(items = viewModel.portals) { portal ->
-                Row(Modifier.padding(8.dp)){
+                Row(Modifier.padding(8.dp)) {
                     PortalLayout(portal)
                 }
             }
@@ -62,7 +76,7 @@ private fun PortalOverviewScreenContent(modifier: Modifier, navHostController: N
 }
 
 @Composable
-fun PortalLayout(portal: Portal){
+fun PortalLayout(portal: Portal) {
     Card(
         backgroundColor = Color.Gray,
         modifier = Modifier
@@ -77,7 +91,7 @@ fun PortalLayout(portal: Portal){
                 fontSize = 12.sp,
                 color = Color(0xFFFFFFFF),
                 textAlign = TextAlign.Center,
-                modifier = Modifier.padding(start= 16.dp, top = 4.dp)
+                modifier = Modifier.padding(start = 16.dp, top = 4.dp)
             )
             Text(
                 text = portal.url,
@@ -90,13 +104,14 @@ fun PortalLayout(portal: Portal){
         }
     }
 }
+
 @Preview(showBackground = true)
 @Composable
-fun DefaultPreview() {
+private fun DefaultPreviewOverview() {
     MADLevel3Task2Theme {
         val navController = rememberNavController()
         val viewModel: PortalViewModel = viewModel()
-        viewModel.someValues()
-        PortalOverviewScreen(navController,viewModel);
+        viewModel.portals.addAll(viewModel.someValues())
+        PortalOverviewScreen(navController, viewModel);
     }
 }
