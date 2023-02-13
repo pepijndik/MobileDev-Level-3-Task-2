@@ -10,7 +10,16 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
+import nl.pdik.level3.madlevel3_task2.ui.screens.AddPortalScreen
+import nl.pdik.level3.madlevel3_task2.ui.screens.PortalOverviewScreen
+import nl.pdik.level3.madlevel3_task2.ui.screens.PortalScreens
 import nl.pdik.level3.madlevel3_task2.ui.theme.MADLevel3Task2Theme
+import nl.pdik.level3.madlevel3_task2.viewModel.PortalViewModel
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -22,22 +31,45 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colors.background
                 ) {
-                    Greeting("Android")
+
+                    val navController = rememberNavController()
+                    PortalNavHost(navController,modifier = Modifier)
                 }
             }
         }
     }
 }
-
 @Composable
-fun Greeting(name: String) {
-    Text(text = "Hello $name!")
+private fun PortalNavHost(
+    navController: NavHostController, modifier: Modifier
+) {
+    val viewModel: PortalViewModel = viewModel()
+    viewModel.someValues(); //some random start values
+    NavHost(
+        navController = navController,
+        startDestination = PortalScreens.OverviewScreen.name,
+        modifier = modifier
+    ){
+        composable(route = PortalScreens.OverviewScreen.name)
+        {
+            PortalOverviewScreen(navController,viewModel)
+        }
+        composable(PortalScreens.AddPortalScreen.name) {
+            AddPortalScreen(navController,viewModel)
+        }
+    }
+
 }
+
+
+
 
 @Preview(showBackground = true)
 @Composable
 fun DefaultPreview() {
     MADLevel3Task2Theme {
-        Greeting("Android")
+        val navController = rememberNavController()
+        val viewModel: PortalViewModel = viewModel()
+        PortalOverviewScreen(navController,viewModel)
     }
 }

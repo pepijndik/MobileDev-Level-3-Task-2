@@ -1,3 +1,6 @@
 <resources>
     <string name="app_name">MAD Level 3 - Task 2</string>
+    <string name="add_portal">Add portal</string>
+    <string name="new_portal_name">new Portal name</string>
+    <string name="new_portal_url">new Portal url</string>
 </resources>
