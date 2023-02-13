@@ -46,7 +46,7 @@ private fun PortalNavHost(
 ) {
     val context = LocalContext.current
     val viewModel: PortalViewModel = viewModel()
-    viewModel.someValues(); //some random start values
+    viewModel.portals.addAll(viewModel.someValues()) //some random start values
     NavHost(
         navController = navController,
         startDestination = PortalScreens.OverviewScreen.name,
@@ -54,7 +54,7 @@ private fun PortalNavHost(
     ){
         composable(route = PortalScreens.OverviewScreen.name)
         {
-            PortalOverviewScreen(navController,viewModel)
+            PortalOverviewScreen(navController,viewModel,context)
         }
         composable(PortalScreens.AddPortalScreen.name) {
             AddPortalScreen(navController,viewModel, context)
@@ -73,6 +73,6 @@ fun DefaultPreview() {
         val navController = rememberNavController()
         val viewModel: PortalViewModel = viewModel()
         viewModel.someValues();
-        PortalOverviewScreen(navController,viewModel)
+        PortalNavHost(navController,modifier = Modifier)
     }
 }

@@ -1,6 +1,8 @@
 package nl.pdik.level3.madlevel3_task2.ui.screens
 
 import android.content.Context
+import android.webkit.URLUtil
+import android.widget.Toast
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -83,7 +85,7 @@ private fun AddPortalScreenContent(
 
         Button(
             modifier = Modifier.padding(start = 32.dp, top = 24.dp).fillMaxWidth(),
-            onClick = { onAdd(name.value, url.value, viewModel, context) })
+            onClick = { onAdd(name.value, url.value, viewModel, context,navHostController) })
         {
             Text(text = stringResource(id = R.string.add_portal))
         }
@@ -92,12 +94,22 @@ private fun AddPortalScreenContent(
 }
 
 
-private fun onAdd(name: String, url: String, viewModel: PortalViewModel, context: Context) {
-    var regex = Regex("(.{5}&\\bhttps:\\/\\/\\b)")
-    if (url.matches(regex) && name.isNotBlank()) {
+private fun onAdd(name: String, url: String, viewModel: PortalViewModel, context: Context, navHostController: NavHostController) {
+    val regex = Regex("(.{6})")
+    if(name.isBlank()){
+        informUser(context,R.string.name_empty)
+    }
+    if (url.length >=6 && name.isNotBlank() && URLUtil.isValidUrl(url)) {
         viewModel.addPortal(Portal(url, name))
+        navHostController.popBackStack()
+    }else{
+        informUser(context,R.string.url_misformed)
     }
 }
+private fun informUser(context: Context, msgId: Int) {
+    Toast.makeText(context, context.getString(msgId), Toast.LENGTH_SHORT).show()
+}
+
 
 @Preview(showBackground = true)
 @Composable

@@ -3,4 +3,7 @@
     <string name="add_portal">Add portal</string>
     <string name="new_portal_name">new Portal name</string>
     <string name="new_portal_url">new Portal url</string>
+    <string name="url_misformed">The portal url is invalid!</string>
+    <string name="name_empty">Name is empty</string>
+
 </resources>

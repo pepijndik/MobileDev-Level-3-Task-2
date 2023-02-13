@@ -1,5 +1,9 @@
 package nl.pdik.level3.madlevel3_task2.ui.screens
 
+import android.content.Context
+import android.net.Uri
+import androidx.browser.customtabs.CustomTabColorSchemeParams
+import androidx.browser.customtabs.CustomTabsIntent
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
@@ -14,12 +18,15 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.core.content.ContentProviderCompat.requireContext
+import androidx.core.content.ContextCompat
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
@@ -29,7 +36,7 @@ import nl.pdik.level3.madlevel3_task2.ui.theme.MADLevel3Task2Theme
 import nl.pdik.level3.madlevel3_task2.viewModel.PortalViewModel
 
 @Composable
-fun PortalOverviewScreen(navHostController: NavHostController, viewModel: PortalViewModel) {
+fun PortalOverviewScreen(navHostController: NavHostController, viewModel: PortalViewModel, context: Context) {
     Scaffold(
         topBar = {
             TopAppBar(title = { Text(text = stringResource(id = R.string.app_name)) })
@@ -47,7 +54,8 @@ fun PortalOverviewScreen(navHostController: NavHostController, viewModel: Portal
             PortalOverviewScreenContent(
                 Modifier.padding(padding),
                 navHostController,
-                viewModel
+                viewModel,
+                context
             )
         }
     )
@@ -57,7 +65,8 @@ fun PortalOverviewScreen(navHostController: NavHostController, viewModel: Portal
 private fun PortalOverviewScreenContent(
     modifier: Modifier,
     navHostController: NavHostController,
-    viewModel: PortalViewModel
+    viewModel: PortalViewModel,
+    context: Context
 ) {
     LazyVerticalGrid(
         columns = GridCells.Adaptive(140.dp),
@@ -68,20 +77,23 @@ private fun PortalOverviewScreenContent(
         content = {
             items(items = viewModel.portals) { portal ->
                 Row(Modifier.padding(8.dp)) {
-                    PortalLayout(portal)
+                    PortalLayout(portal, context)
                 }
             }
         }
     )
 }
 
+@OptIn(ExperimentalMaterialApi::class)
 @Composable
-fun PortalLayout(portal: Portal) {
+fun PortalLayout(portal: Portal,context: Context) {
     Card(
+        onClick = { openCromeTab(portal.url,context) },
         backgroundColor = Color.Gray,
         modifier = Modifier
             .padding(4.dp)
             .fillMaxWidth(),
+
         elevation = 8.dp,
     ) {
         Column() {
@@ -105,6 +117,13 @@ fun PortalLayout(portal: Portal) {
     }
 }
 
+
+private fun openCromeTab(url: String,context: Context){
+    var builder = CustomTabsIntent.Builder()
+    var customTabsIntent :CustomTabsIntent  = builder.build();
+    customTabsIntent.launchUrl(context, Uri.parse(url))
+
+}
 @Preview(showBackground = true)
 @Composable
 private fun DefaultPreviewOverview() {
@@ -112,6 +131,6 @@ private fun DefaultPreviewOverview() {
         val navController = rememberNavController()
         val viewModel: PortalViewModel = viewModel()
         viewModel.portals.addAll(viewModel.someValues())
-        PortalOverviewScreen(navController, viewModel);
+        PortalOverviewScreen(navController, viewModel, LocalContext.current);
     }
 }
